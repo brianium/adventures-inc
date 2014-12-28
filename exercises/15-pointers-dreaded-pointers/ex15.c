@@ -3,20 +3,20 @@
 void print_using_pointers(int *age, char **name, int count)
 {
     int i = 0;
-    for(i = 0; i < count; i++) {
+    while(i < count) {
         printf("%s has %d years alive.\n", *(name + i), *(age + i));
+        i++;
     }
-    
     printf("---\n");
 }
 
 void print_using_indexes(int *age, char **name, int count)
 {
     int i = 0;
-    for(i = 0; i < count; i++) {
+    while(i < count) {
         printf("%s is %d years old.\n", name[i], age[i]);
+        i++;
     }
-    
     printf("---\n");
 }
 
@@ -24,12 +24,10 @@ void print_using_silly_pointers(int ages[], char *names[], int count)
 {
     int *age = ages;
     char **name = names;
-    for(age = ages, name = names;
-            (age - ages) < count;
-            name++, age++)
-    {
-        printf("%s lived %d years so far.\n",
-                *name, *age);
+    while (age - ages < count) {
+        printf("%s lived %d years so far.\n", *name, *age);
+        name++;
+        age++;
     }
 
 }
@@ -39,11 +37,11 @@ void print_addresses(int ages[], char *names[], int count)
     int *age = ages;
     char **name = names;
     int i = 0;
-
-    for(age = ages, name = names, i = 0; i < count; i++) {
-       printf("%s has address %p and their age %d has address %p\n",
+    while(i < count) {
+        printf("%s has address %p and their age %d has address %p\n",
                *(name+i), &name[i],
                *(age+i), &age[i]);
+        i++;
     }
 }
 
