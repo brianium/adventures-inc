@@ -32,10 +32,8 @@ void print_using_silly_pointers(int ages[], char *names[], int count)
 
 }
 
-void print_addresses(int ages[], char *names[], int count)
+void print_addresses(int *age, char **name, int count)
 {
-    int *age = ages;
-    char **name = names;
     int i = 0;
     while(i < count) {
         printf("%s has address %p and their age %d has address %p\n",
@@ -71,7 +69,7 @@ int main(int argc, char *argv[])
     
     // this extra credit was initially terrible because i forgot to reset cur_name and cur_age
     // which resulted in a sweet seg fault party.
-    print_addresses(ages, names, count);
+    print_addresses(cur_age, cur_name, count);
 
     return 0;
 }
