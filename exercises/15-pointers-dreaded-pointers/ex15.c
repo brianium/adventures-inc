@@ -1,5 +1,52 @@
 #include <stdio.h>
 
+void print_using_pointers(int *age, char **name, int count)
+{
+    int i = 0;
+    for(i = 0; i < count; i++) {
+        printf("%s has %d years alive.\n", *(name + i), *(age + i));
+    }
+    
+    printf("---\n");
+}
+
+void print_using_indexes(int *age, char **name, int count)
+{
+    int i = 0;
+    for(i = 0; i < count; i++) {
+        printf("%s is %d years old.\n", name[i], age[i]);
+    }
+    
+    printf("---\n");
+}
+
+void print_using_silly_pointers(int ages[], char *names[], int count)
+{
+    int *age = ages;
+    char **name = names;
+    for(age = ages, name = names;
+            (age - ages) < count;
+            name++, age++)
+    {
+        printf("%s lived %d years so far.\n",
+                *name, *age);
+    }
+
+}
+
+void print_addresses(int ages[], char *names[], int count)
+{
+    int *age = ages;
+    char **name = names;
+    int i = 0;
+
+    for(age = ages, name = names, i = 0; i < count; i++) {
+       printf("%s has address %p and their age %d has address %p\n",
+               *(name+i), &name[i],
+               *(age+i), &age[i]);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     // create two arrays we care about
@@ -14,41 +61,11 @@ int main(int argc, char *argv[])
 
     // safely get the size of ages
     int count = sizeof(ages) / sizeof(int);
-    int i = 0;
 
-    // first way using indexing
-    for(i = 0; i < count; i++) {
-        printf("%s has %d years alive.\n", *(cur_name + i), *(cur_age + i));
-    }
-
-    printf("---\n");
-
-    // setup the pointers to the start of the arrays
-
-    // second way using pointers
-    for(i = 0; i < count; i++) {
-        printf("%s is %d years old.\n",
-                *(cur_name+i), *(cur_age+i));
-    }
-
-    printf("---\n");
-
-    // third way, pointers are just arrays
-    for(i = 0; i < count; i++) {
-        printf("%s is %d years old again.\n",
-                cur_name[i], cur_age[i]);
-    }
-
-    printf("---\n");
-
-    // fourth way with pointers in a stupid complex way
-    for(cur_name = names, cur_age = ages;
-            (cur_age - ages) < count;   //my address minus the default address - that is the address of the first element
-            cur_name++, cur_age++)
-    {
-        printf("%s lived %d years so far.\n",
-                *cur_name, *cur_age);
-    }
+    print_using_pointers(cur_age, cur_name, count);
+    print_using_pointers(cur_age, cur_name, count);
+    print_using_indexes(cur_age, cur_name, count);
+    print_using_silly_pointers(ages, names, count);
 
     // The final thing to grasp at this stage is that you can use either syntax 
     // for most array or pointer operations. You can take a pointer to something, but use the array 
@@ -56,11 +73,7 @@ int main(int argc, char *argv[])
     
     // this extra credit was initially terrible because i forgot to reset cur_name and cur_age
     // which resulted in a sweet seg fault party.
-    for(cur_name = names, cur_age = ages, i = 0; i < count; i++) {
-       printf("%s has address %p and their age %d has address %p\n",
-               *(cur_name+i), &cur_name[i],
-               *(cur_age+i), &cur_age[i]);
-    }
+    print_addresses(ages, names, count);
 
     return 0;
 }
