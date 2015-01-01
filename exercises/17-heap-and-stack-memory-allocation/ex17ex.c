@@ -86,8 +86,11 @@ void Database_load(struct Connection *conn)
         char *name = malloc(conn->db->max_size * sizeof(char));
         char *email = malloc(conn->db->max_size * sizeof(char));
         fread(addr, sizeof(struct Address), 1, conn->file);
+
+        //for some reason I cant do addr->email or addr->name here, i have to use placeholders
         fread(name, sizeof(char), conn->db->max_size, conn->file);
         fread(email, sizeof(char), conn->db->max_size, conn->file);
+
         addr->name = name;
         addr->email = email;
     }
