@@ -176,8 +176,14 @@ void Database_set(struct Connection *conn, int id, const char *name, const char 
 
     // flag the address as having been set
     addr->set = 1;
-    // WARNING: bug, read the "How To Break It" and fix this
-    char *res = strncpy(addr->name, name, MAX_DATA);
+    // WARNING: bug, read the "How To Break It" and fix this - using char array per
+    // docs on strcpy - chararray will not nul terminate. - manually place nul character to fix
+    
+    char chararray[] = {
+        'b', 'r', 'i', 'a', 'n', '\0'
+    };
+
+    char *res = strncpy(addr->name, chararray, MAX_DATA);
     //demonstrate the strncpy bug
     if(!res) die("Name copy failed");
 
