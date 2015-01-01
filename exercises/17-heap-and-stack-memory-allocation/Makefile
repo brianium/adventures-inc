@@ -11,3 +11,4 @@ clean:
 	rm -r ex17break.dSYM
 	rm -r ex17ex
 	rm -r ex17ex.dSYM
+	rm -r db.dat

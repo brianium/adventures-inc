@@ -4,11 +4,6 @@
 #include <errno.h>
 #include <string.h>
 
-// create constants via c pre processor
-#define MAX_DATA 512
-#define MAX_ROWS 100
-
-
 // define an Address struct
 struct Address {
     // create an int property to store an id
@@ -17,18 +12,22 @@ struct Address {
     // create an int property to use as a boolean flag
     int set;
 
-    // create a byte array as large as the MAX_DATA constant to store a name
-    char name[MAX_DATA];
+    // a name string
+    char *name;
 
-    // create a byte array as large as the MAX_DATA constant to store an email
-    char email[MAX_DATA];
+    // an email string
+    char *email;
 };
 
 // define a Database struct
 struct Database {
 
-    // define an array of Address structs of size MAX_ROWS
-    struct Address rows[MAX_ROWS];
+    // define an array of Address structs of dynamic size
+    struct Address *rows;
+
+    int max_rows;
+
+    int max_size;
 };
 
 // define a Connection struct
@@ -78,6 +77,20 @@ void Database_load(struct Connection *conn)
     // return the number of objects read - 1 or 0. expects to read 1 item with as many bytes as a database struct.
     // the bytes are read from the conn->file FILE and stored in the location of conn->db
     int rc = fread(conn->db, sizeof(struct Database), 1, conn->file);
+
+    conn->db->rows = malloc(conn->db->max_rows * sizeof(struct Address));
+
+    int i = 0;
+    for(i = 0; i < conn->db->max_rows; i++) {
+        struct Address *addr = &conn->db->rows[i];
+        char *name = malloc(conn->db->max_size * sizeof(char));
+        char *email = malloc(conn->db->max_size * sizeof(char));
+        fread(addr, sizeof(struct Address), 1, conn->file);
+        fread(name, sizeof(char), conn->db->max_size, conn->file);
+        fread(email, sizeof(char), conn->db->max_size, conn->file);
+        addr->name = name;
+        addr->email = email;
+    }
 
     // if the file was not read then exit
     if(rc != 1) die("Failed to load database.", conn);
@@ -146,6 +159,14 @@ void Database_write(struct Connection *conn)
     // write the contents of the Database pointer to the FILE stream on connection
     int rc = fwrite(conn->db, sizeof(struct Database), 1, conn->file);
 
+    int i = 0;
+    for(i = 0; i < conn->db->max_rows; i++) {
+        struct Address *addr = &conn->db->rows[i];
+        fwrite(addr, sizeof(struct Address), 1, conn->file);
+        fwrite(addr->name, sizeof(char), conn->db->max_size, conn->file);
+        fwrite(addr->email, sizeof(char), conn->db->max_size, conn->file);
+    }
+
     // if 1 object was not written, there was an error and we exit the program
     if(rc != 1) die("Failed to write database", conn);
 
@@ -157,16 +178,23 @@ void Database_write(struct Connection *conn)
 }
 
 // define a function to initialize the connection's database
-void Database_create(struct Connection *conn)
+void Database_create(struct Connection *conn, int max_size, int max_rows)
 {
     int i = 0;
 
-    // loop MAX_ROWS times
-    for(i = 0; i < MAX_ROWS; i++) {
+    struct Database *db = conn->db;
+    db->max_size = max_size;
+    db->max_rows = max_rows;
+    db->rows = malloc(max_rows * sizeof(struct Address));
+
+    // loop max_rows times
+    for(i = 0; i < db->max_rows; i++) {
         // make a prototype to initialize an Address
         struct Address addr = {.id = i, .set = 0};
+        addr.name = malloc(max_size * sizeof(char));
+        addr.email = malloc(max_size * sizeof(char));
         // then just assign it to a database row
-        conn->db->rows[i] = addr;
+        db->rows[i] = addr;
     }
 }
 
@@ -183,12 +211,12 @@ void Database_set(struct Connection *conn, int id, const char *name, const char 
     // flag the address as having been set
     addr->set = 1;
     // WARNING: bug, read the "How To Break It" and fix this
-    char *res = strncpy(addr->name, name, MAX_DATA);
+    char *res = strncpy(addr->name, name, conn->db->max_size * sizeof(char));
     //demonstrate the strncpy bug
     if(!res) die("Name copy failed", conn);
 
     // copy email passed in to the address's email - strncpy exists in string.h
-    res = strncpy(addr->email, email, MAX_DATA);
+    res = strncpy(addr->email, email, conn->db->max_size * sizeof(char));
 
     // if destination string not returned then exit program
     if(!res) die("Email copy failed", conn);
@@ -229,8 +257,8 @@ void Database_list(struct Connection *conn)
     // get the database on the connection
     struct Database *db = conn->db;
 
-    // loop until MAX_ROWS
-    for (i = 0; i < MAX_ROWS; i++) {
+    // loop until max_rows 
+    for (i = 0; i < db->max_rows; i++) {
         // get a pointer to the Address at the given location
         struct Address *cur = &db->rows[i];
 
@@ -239,6 +267,15 @@ void Database_list(struct Connection *conn)
             // then print it
             Address_print(cur);
         }
+    }
+}
+
+
+void Connection_check_id(struct Connection *conn, int id)
+{
+    struct Database *db = conn->db;
+    if (id >= db->max_rows) {
+        die("There is not that many records", conn);
     }
 }
 
@@ -259,25 +296,29 @@ int main(int argc, char *argv[])
 
     // intialize the id of the record being sought
     int id = 0;
-
-    // if the number of arguments is greater than three, then the 3rd real argument
-    // ASCII string is converted to an integer via atoi - stdlib.h
-    if(argc > 3) id = atoi(argv[3]);
-
-    // if the id is greater than the allowed MAX_ROWS constant, then exit the program
-    if(id >= MAX_ROWS) die("There's not that many records.", conn);
-
+    int max_size = 0;
+    int max_rows = 0;
+ 
     //perform a task based on the action provided
     switch(action) {
         case 'c':
+
+            //max size is argv[3] and max_rows is argv[4]
+            max_size = atoi(argv[3]);
+            max_rows = atoi(argv[4]);
+
             // if the action is c for create, then we create a new database by filling it with prototypes
-            Database_create(conn);
+            Database_create(conn, max_size, max_rows);
 
             // we then write the protyped data to file
             Database_write(conn);
             break;
 
         case 'g':
+
+            if(argc > 3) id = atoi(argv[3]);
+            Connection_check_id(conn, id);
+
             // if the action is g for get we check to see if we have the right amount of arguments
             // if we dont we assume we are missing an ID and exit the program
             if(argc != 4) die("Need an id to get", conn);
@@ -287,6 +328,10 @@ int main(int argc, char *argv[])
             break;
 
         case 's':
+
+            if(argc > 3) id = atoi(argv[3]);
+            Connection_check_id(conn, id);
+
             // if the action is s for set we verify we have the right number of args
             // and exit if we do not
             if(argc != 6) die("Need id, name, email to set", conn);
@@ -299,6 +344,10 @@ int main(int argc, char *argv[])
             break;
 
         case 'd':
+
+            if(argc > 3) id = atoi(argv[3]);
+            Connection_check_id(conn, id);
+
             // if the action is d for delete verify we have the right args
             // and exit the program if we do not
             if(argc != 4) die("Need id to delete", conn);
