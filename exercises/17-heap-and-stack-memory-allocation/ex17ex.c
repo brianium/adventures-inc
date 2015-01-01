@@ -86,19 +86,15 @@ void Database_load(struct Connection *conn)
 
         // have to initialize placeholders - why can't i just do
         // addr->name = malloc(...) and addr->email = malloc(...)
-        char *name = malloc(conn->db->max_size * sizeof(char));
-        char *email = malloc(conn->db->max_size * sizeof(char));
-
         fread(addr, sizeof(struct Address), 1, conn->file);
+
+        addr->name = malloc(conn->db->max_size * sizeof(char));
+        addr->email = malloc(conn->db->max_size * sizeof(char));
 
         //for some reason I cant do addr->name or addr->email here after malloc,
         //i have to use placeholders *name and *email
-        fread(name, sizeof(char), conn->db->max_size, conn->file);
-        fread(email, sizeof(char), conn->db->max_size, conn->file);
-
-        // seems superflous, but it won't work the other way
-        addr->name = name;
-        addr->email = email;
+        fread(addr->name, sizeof(char), conn->db->max_size, conn->file);
+        fread(addr->email, sizeof(char), conn->db->max_size, conn->file);
     }
 
     // if the file was not read then exit
