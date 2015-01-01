@@ -83,14 +83,20 @@ void Database_load(struct Connection *conn)
     int i = 0;
     for(i = 0; i < conn->db->max_rows; i++) {
         struct Address *addr = &conn->db->rows[i];
+
+        // have to initialize placeholders - why can't i just do
+        // addr->name = malloc(...) and addr->email = malloc(...)
         char *name = malloc(conn->db->max_size * sizeof(char));
         char *email = malloc(conn->db->max_size * sizeof(char));
+
         fread(addr, sizeof(struct Address), 1, conn->file);
 
-        //for some reason I cant do addr->email or addr->name here, i have to use placeholders
+        //for some reason I cant do addr->name or addr->email here after malloc,
+        //i have to use placeholders *name and *email
         fread(name, sizeof(char), conn->db->max_size, conn->file);
         fread(email, sizeof(char), conn->db->max_size, conn->file);
 
+        // seems superflous, but it won't work the other way
         addr->name = name;
         addr->email = email;
     }
@@ -247,6 +253,8 @@ void Database_delete(struct Connection *conn, int id)
 {
     //initialize an Address on the stack
     struct Address addr = {.id = id, .set = 0};
+    addr.name = malloc(conn->db->max_size * sizeof(char));
+    addr.email = malloc(conn->db->max_size * sizeof(char));
 
     //set the record identified by id to the initialized value
     conn->db->rows[id] = addr;
