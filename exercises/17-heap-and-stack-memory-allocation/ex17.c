@@ -11,17 +11,24 @@
 // define an Address struct
 struct Address {
     // create an int property to store an id
-    int id;
+    int id; // 4 bytes
     
     // create an int property to use as a boolean flag
-    int set;
+    int set; // 4 bytes
 
     // create a byte array as large as the MAX_DATA constant to store a name
-    char name[MAX_DATA];
+    char name[MAX_DATA]; // 512 bytes
 
     // create a byte array as large as the MAX_DATA constant to store an email
-    char email[MAX_DATA];
+    char email[MAX_DATA]; // 512 bytes
+
+    char *somestr; // 8 bytes
+
+    //char pad[6] // 6 bytes
+
+    short someshort; //2 bytes
 };
+
 
 // define a Database struct
 struct Database {
@@ -238,6 +245,7 @@ void Database_list(struct Connection *conn)
 
 int main(int argc, char *argv[])
 {
+    printf("SIZEOF ADDRESS %lu\n", sizeof(struct Address));
     // we need at least 3 arguments - if not then exit program
     if(argc < 3) die("USAGE: ex17 <dbfile> <action> [action params]");
 
