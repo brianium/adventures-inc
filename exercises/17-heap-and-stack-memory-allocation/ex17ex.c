@@ -245,6 +245,34 @@ void Database_get(struct Connection *conn, int id)
     }
 }
 
+void Database_find(struct Connection *conn, char field, const char *value)
+{
+    int i = 0;
+    struct Database *db = conn->db;
+    switch (field) {
+        case 'n':
+            for(i = 0; i < db->max_rows; i++) {
+                struct Address *addr = &db->rows[i];
+                if (strcmp(addr->name, value) == 0) {
+                    Address_print(addr);
+                }
+            }
+            break;
+
+        case 'e':
+            for(i = 0; i < db->max_rows; i++) {
+                struct Address *addr = &db->rows[i];
+                if (strcmp(addr->email, value) == 0) {
+                    Address_print(addr);
+                }
+            }
+            break;
+
+        default:
+            die("Cannot search on given field", conn);
+    }
+}
+
 // define a function to set the record identified by id back to an initialized state
 // i.e unset it
 void Database_delete(struct Connection *conn, int id)
@@ -307,6 +335,7 @@ int main(int argc, char *argv[])
     int id = 0;
     int max_size = 0;
     int max_rows = 0;
+    char searchField = '\0';
  
     //perform a task based on the action provided
     switch(action) {
@@ -371,6 +400,12 @@ int main(int argc, char *argv[])
         case 'l':
             // if the action is l for list, then we list the contents of the database file.
             Database_list(conn);
+            break;
+
+        case 'f':
+            if (argc != 5) die("Find requires a search key and value", conn);
+            searchField = argv[3][0];
+            Database_find(conn, searchField, argv[4]);
             break;
 
         default:
