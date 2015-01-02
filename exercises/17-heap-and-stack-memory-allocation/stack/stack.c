@@ -36,6 +36,9 @@ char *Stack_pop(struct Stack *stack)
 
 char *Stack_peek(struct Stack *stack)
 {
+    if (stack->top == 0) {
+        return NULL;
+    }
     return stack->strings[stack->top - 1];
 }
 
