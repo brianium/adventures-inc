@@ -147,6 +147,8 @@ void Database_close(struct Connection *conn)
         // then close the FILE pointer on the connection if it is non NULL - stdio.h
         if(conn->file) fclose(conn->file);
 
+        if (conn->db->rows) free(conn->db->rows);
+
         // if the Database pointer is non NULL - then free its memory
         if(conn->db) free(conn->db);
 
