@@ -48,6 +48,32 @@ int *bubble_sort(int *numbers, int count, compare_cb cmp)
     return target;
 }
 
+int *selection_sort(int *numbers, int count, compare_cb cmp)
+{
+    int subject = 0;
+    int temp = 0;
+    int i = 0;
+    int j = 0;
+    int *target = malloc(count * sizeof(int));
+
+    if(!target) die("Memory error.");
+    memcpy(target, numbers, count * sizeof(int));
+
+    for(i = 0; i < count - 1; i++) {
+        subject = i;
+        for(j = i + 1; j < count; j++) {
+            if(cmp(target[subject], target[j]) > 0) {
+                subject = j;
+            }
+        }
+        temp = target[i];
+        target[i] = target[subject];
+        target[subject] = temp;
+    }
+
+    return target;
+}
+
 int sorted_order(int a, int b)
 {
     return a - b;
@@ -97,9 +123,17 @@ int main(int argc, char *argv[])
         numbers[i] = atoi(inputs[i]);
     }
 
+    printf("Using bubble_sort\n");
     test_sorting(numbers, count, bubble_sort, sorted_order);
     test_sorting(numbers, count, bubble_sort, reverse_order);
     test_sorting(numbers, count, bubble_sort, strange_order);
+    printf("\n");
+
+    printf("Using selection_sort\n");
+    test_sorting(numbers, count, selection_sort, sorted_order);
+    test_sorting(numbers, count, selection_sort, reverse_order);
+    test_sorting(numbers, count, selection_sort, strange_order);
+    printf("\n");
 
     free(numbers);
 
