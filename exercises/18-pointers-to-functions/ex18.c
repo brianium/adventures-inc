@@ -18,6 +18,7 @@ void die(const char *message)
 // a typedef creates a fake type, in this
 // case for a function pointer
 typedef int (*compare_cb)(int a, int b);
+typedef int *(*sort_fn)(int *numbers, int count, compare_cb cmp);
 
 /**
  * A classic bubble sort function that uses the
@@ -66,10 +67,10 @@ int strange_order(int a, int b)
     }
 }
 
-void test_sorting(int *numbers, int count, compare_cb cmp)
+void test_sorting(int *numbers, int count, sort_fn sort, compare_cb cmp)
 {
     int i = 0;
-    int *sorted = bubble_sort(numbers, count, cmp);
+    int *sorted = sort(numbers, count, cmp);
 
     if (!sorted) die("Failed to sort as requested.");
 
@@ -96,9 +97,9 @@ int main(int argc, char *argv[])
         numbers[i] = atoi(inputs[i]);
     }
 
-    test_sorting(numbers, count, sorted_order);
-    test_sorting(numbers, count, reverse_order);
-    test_sorting(numbers, count, strange_order);
+    test_sorting(numbers, count, bubble_sort, sorted_order);
+    test_sorting(numbers, count, bubble_sort, reverse_order);
+    test_sorting(numbers, count, bubble_sort, strange_order);
 
     free(numbers);
 
