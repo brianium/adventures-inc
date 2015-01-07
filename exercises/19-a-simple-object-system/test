@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+echo -e "Test listing directions";
+./ex19 <<< l
+
+echo -e "Gonna go north a bunch";
+./ex19 <<< nnnnnnnn
+
+echo -e "Gonna try going north a bunch then south";
+./ex19 <<< nnnnss
+
+echo -e "North then south then east then west";
+./ex19 <<< nnnnsseewww
+
+echo -e "North then south then west then east then attack a bunch";
+./ex19 <<< nsweaaaaaaaaaaaaaaaaaaaaaaaa
