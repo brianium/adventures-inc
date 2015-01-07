@@ -154,8 +154,11 @@ int process_input(Map *game)
     assert(game != NULL);
     printf("\n> ");
 
+    errno = 0;
     char ch = getchar();
     getchar(); // eat ENTER
+
+    assert(! errno);
 
     int damage = rand() % 4;
 

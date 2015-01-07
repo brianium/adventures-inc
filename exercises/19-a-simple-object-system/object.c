@@ -56,10 +56,12 @@ void *Object_new(size_t size, Object proto, char *description)
     // this seems weird, but we can make a struct of one size,
     // then point a different pointer at it to "cast" it
     Object *el = calloc(1, size);
+    assert(el != NULL);
     *el = proto;
 
     // copy the description over
     el->description = strdup(description);
+    assert(el->description != NULL);
 
     // initialize it with whatever init we were given
     if(!el->init(el)) {
@@ -67,6 +69,7 @@ void *Object_new(size_t size, Object proto, char *description)
         el->destroy(el);
         return NULL;
     } else {
+        assert(el != null);
         // all done, we made an object of any type
         return el;
     }
