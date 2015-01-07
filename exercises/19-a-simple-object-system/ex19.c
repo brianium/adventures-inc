@@ -3,6 +3,12 @@
 #include <time.h>
 #include "lib.h"
 
+Object MonsterProto = {
+    .init = Monster_init,
+    .attack = Monster_attack
+};
+
+
 Object MapProto = {
     .init = Map_init,
     .move = Map_move,

@@ -29,10 +29,7 @@ int Monster_init(void *self)
     return 1;
 }
 
-Object MonsterProto = {
-    .init = Monster_init,
-    .attack = Monster_attack
-};
+extern Object MonsterProto;
 
 void *Room_move(void *self, Direction direction)
 {
