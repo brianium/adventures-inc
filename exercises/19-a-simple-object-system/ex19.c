@@ -9,6 +9,11 @@ Object MapProto = {
     .attack = Map_attack
 };
 
+Object RoomProto = {
+    .move = Room_move,
+    .attack = Room_attack
+};
+
 int main(int argc, char *argv[])
 {
     // simple way to setup randomness

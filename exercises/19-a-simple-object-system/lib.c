@@ -77,10 +77,7 @@ int Room_attack(void *self, int damage)
     }
 }
 
-Object RoomProto = {
-    .move = Room_move,
-    .attack = Room_attack
-};
+extern Object RoomProto;
 
 void *Map_move(void *self, Direction direction)
 {
