@@ -135,11 +135,7 @@ int Map_init(void *self)
     return 1;
 }
 
-Object MapProto = {
-    .init = Map_init,
-    .move = Map_move,
-    .attack = Map_attack
-};
+extern Object MapProto;
 
 int process_input(Map *game)
 {

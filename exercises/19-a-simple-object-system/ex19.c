@@ -3,7 +3,11 @@
 #include <time.h>
 #include "lib.h"
 
-extern Object MapProto;
+Object MapProto = {
+    .init = Map_init,
+    .move = Map_move,
+    .attack = Map_attack
+};
 
 int main(int argc, char *argv[])
 {
