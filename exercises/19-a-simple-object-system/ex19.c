@@ -9,7 +9,7 @@ int Monster_attack(void *self, int damage)
 {
     Monster *monster = self;
 
-    printf("You attack %s!\n", monster->_(description));
+    printf("You attack %s!\n", monster->proto.description);
 
     monster->hit_points -= damage;
 
@@ -57,7 +57,7 @@ void *Room_move(void *self, Direction direction)
     }
 
     if(next) {
-        next->_(describe)(next);
+        next->proto.describe(next);
     }
 
     return next;
@@ -69,7 +69,7 @@ int Room_attack(void *self, int damage)
     Monster *monster = room->bad_guy;
 
     if(monster) {
-        monster->_(attack)(monster, damage);
+        monster->proto.attack(monster, damage);
         return 1;
     } else {
         printf("You flail in the air at nothing. Idiot.\n");
@@ -88,7 +88,7 @@ void *Map_move(void *self, Direction direction)
     Room *location = map->location;
     Room *next = NULL;
 
-    next = location->_(move)(location, direction);
+    next = location->proto.move(location, direction);
 
     if(next) {
         map->location = next;
@@ -102,7 +102,7 @@ int Map_attack(void *self, int damage)
     Map *map = self;
     Room *location = map->location;
 
-    return location->_(attack)(location, damage);
+    return location->proto.attack(location, damage);
 }
 
 int Map_init(void *self)
@@ -110,13 +110,13 @@ int Map_init(void *self)
     Map *map = self;
 
     // make some rooms for a small map
-    Room *hall = NEW(Room, "The great Hall");
-    Room *throne = NEW(Room, "The throne room");
-    Room *arena = NEW(Room, "The arena, with minotaur");
-    Room *kitchen = NEW(Room, "Kitchen, you have the knife now");
+    Room *hall = Object_new(sizeof(Room), RoomProto, "The great Hall");
+    Room *throne = Object_new(sizeof(Room), RoomProto, "The throne room");
+    Room *arena = Object_new(sizeof(Room), RoomProto, "The arena, with minotaur");
+    Room *kitchen = Object_new(sizeof(Room), RoomProto, "Kitchen, you have the knife now");
 
     // put the bad guy in the arena
-    arena->bad_guy = NEW(Monster, "The evil minotaur");
+    arena->bad_guy = Object_new(sizeof(Monster), MonsterProto, "The evil minotaur");
 
     // setup the map rooms
     hall->north = throne;
@@ -157,23 +157,23 @@ int process_input(Map *game)
             break;
 
         case 'n':
-            game->_(move)(game, NORTH);
+            game->proto.move(game, NORTH);
             break;
 
         case 's':
-            game->_(move)(game, SOUTH);
+            game->proto.move(game, SOUTH);
             break;
 
         case 'e':
-            game->_(move)(game, EAST);
+            game->proto.move(game, EAST);
             break;
 
         case 'w':
-            game->_(move)(game, WEST);
+            game->proto.move(game, WEST);
             break;
 
         case 'a':
-            game->_(attack)(game, damage);
+            game->proto.attack(game, damage);
             break;
 
         case 'l':
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
     Map *game = NEW(Map, "The Hall of the Minotaur.");
 
     printf("You enter the ");
-    game->location->_(describe)(game->location);
+    game->location->proto.describe(game->location);
 
     while(process_input(game)) {
     }
