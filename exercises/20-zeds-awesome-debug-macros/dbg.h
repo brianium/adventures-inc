@@ -1,5 +1,6 @@
 #ifndef __dbg_h__
 #define __dbg_h__
+#define NDEBUG 1
 
 #include <stdio.h>
 #include <errno.h>
