@@ -28,3 +28,7 @@ List of size identifiers as they appear:
 * `uint_fast16_t` - `uint16_t`
 * `uint_fast32_t` - `uint32_t`
 * `uint_fast64_t` - `uint64_t`
+
+## Greatest-width integer types
+* `intmax_t` - `__INTMAX_TYPE__` or `long int` or `long long int`
+* `uintmax_t` - `__UINTMAX_TYPE__` or `long unsigned int` or `long long unsigned int`
