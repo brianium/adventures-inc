@@ -9,15 +9,25 @@ List of size identifiers as they appear:
 * `if __LP64__ __WORDSIZE` - `64`
 * `else __WORDSIZE` - `32`
 
+## Exact-width integer types
+* `int8_t` - `__signed char`
+* `int16_t` - `short`
+* `int32_t` - `int`
+* `int64_t` - `long long`
+* `uint8_t` - `unsigned char`
+* `uint16_t` - `unsigned short`
+* `uint32_t` - `unsinged int`
+* `uint64_t` - `unsinged long long`
+
 ## Minimum-width integer types
-* `int_least8_t` - `__signed char` or `int8_t`
-* `int_least16_t` - `short` or `int16_t`
-* `int_least32_t` - `int` or `int32_t`
-* `int_least64_t` - `long long` or `int64_t`
-* `uint8_least8_t` - `unsigned char` or `uint8_t`
-* `uint_least16_t` - `unsigned short` or `uint16_t`
-* `uint_least32_t` - `unsigned int` or `uint32_t`
-* `uint_least64_t` - `unsinged long long` or `uint64_t`
+* `int_least8_t` - `int8_t`
+* `int_least16_t` - `int16_t`
+* `int_least32_t` - `int32_t`
+* `int_least64_t` - `int64_t`
+* `uint8_least8_t` - `uint8_t`
+* `uint_least16_t` - `uint16_t`
+* `uint_least32_t` - `uint32_t`
+* `uint_least64_t` - `uint64_t`
 
 ## Fastest-width integer types
 * `int_fast8_t` - `int8_t`
