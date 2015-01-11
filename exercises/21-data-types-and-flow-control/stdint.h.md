@@ -1,5 +1,5 @@
 stdint.h research
-===============
+=================
 Writing out all the possible available size identifiers.
 
 On Mac OS X - located `/usr/include/stdint.h`
@@ -74,3 +74,11 @@ List of size identifiers as they appear:
 * `UINT_FAST16_MAX` - `UINT16_MAX`
 * `UINT_FAST32_MAX` - `UINT32_MAX`
 * `UINT_FAST64_MAX` - `UINT64_MAX`
+
+## Limits of integer types capable of holding object pointers
+* `if __WORDSIZE == 64 INTPTR_MIN` - `INT64_MIN`
+* `if __WORDSIZE == 32 INTPTR_MIN` - `INT32_MIN`
+* `if __WORDSIZE == 64 INTPTR_MAX` - `INT64_MAX`
+* `if __WORDSIZE == 32 INTPTR_MIN` - `INT32_MAX`
+* `if __WORDSIZE == 64 UINTPTR_MAX` - `UINT64_MAX`
+* `if __WORDSIZE == 32 UINTPTR_MAX` - `UINT32_MAX`
