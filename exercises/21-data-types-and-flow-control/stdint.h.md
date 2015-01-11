@@ -82,3 +82,9 @@ List of size identifiers as they appear:
 * `if __WORDSIZE == 32 INTPTR_MIN` - `INT32_MAX`
 * `if __WORDSIZE == 64 UINTPTR_MAX` - `UINT64_MAX`
 * `if __WORDSIZE == 32 UINTPTR_MAX` - `UINT32_MAX`
+
+## Limits of greatest-width integer types
+* `INTMAX_MIN` - `INT64_MIN`
+* `INTMAX_MAX` - `INT64_MAX`
+* `UINTMAX_MAX` - `UINT64_MAX`
+
