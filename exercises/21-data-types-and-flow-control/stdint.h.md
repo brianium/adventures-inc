@@ -88,3 +88,17 @@ List of size identifiers as they appear:
 * `INTMAX_MAX` - `INT64_MAX`
 * `UINTMAX_MAX` - `UINT64_MAX`
 
+## Other
+* `if __WORDSIZE == 64 PTRDIFF_MIN` - `INT64_MIN`
+* `if __WORDSIZE == 32 PTRDIFF_MIN` - `INT32_MIN`
+* `if __WORDSIZE == 64 PTRDIFF_MAX` - `INT64_MAX`
+* `if __WORDSIZE == 32 PTRDIFF_MAX` - `INT32_MAX`
+* `if __WORDSIZE == 64 SIZE_MAX` - `UINT64_MAX`
+* `if __WORDSIZE == 32 SIZE_MAX` - `UINT32_MAX`
+
+* `WCHAR_MAX` - `__WCHAR_MAX__` or `0x7fffffff`
+* `WCHAR_MIN` - `0` or `(-WCHAR_MAX-1)`
+* `WINT_MIN` - `INT32_MIN`
+* `WINT_MAX` - `INT32_MAX`
+* `SIG_ATOMIC_MIN` - `INT32_MIN`
+* `SIG_ATOMIC_MAX` - `INT32_MAX`
