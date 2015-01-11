@@ -32,3 +32,17 @@ List of size identifiers as they appear:
 ## Greatest-width integer types
 * `intmax_t` - `__INTMAX_TYPE__` or `long int` or `long long int`
 * `uintmax_t` - `__UINTMAX_TYPE__` or `long unsigned int` or `long long unsigned int`
+
+## Limits of exact-width integer types
+* `INT8_MAX` - `127`
+* `INT16_MAX` - `32767`
+* `INT32_MAX` - `2147483647`
+* `INT64_MAX` - `9223372036854775807LL`
+* `INT8_MIN` - `-128`
+* `INT16_MIN` - `-32768`
+* `INT32_MIN` - `(-INT32_MAX-1)`
+* `INT64_MIN` - `(-INT64_MAX-1)`
+* `UINT8_MAX` - `255`
+* `UINT16_MAX` - `65535`
+* `UINT32_MAX` - `4294967295U`
+* `UINT64_MAX` - `18446744073709551615ULL`
