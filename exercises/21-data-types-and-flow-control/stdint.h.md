@@ -18,3 +18,13 @@ List of size identifiers as they appear:
 * `uint_least16_t` - `unsigned short` or `uint16_t`
 * `uint_least32_t` - `unsigned int` or `uint32_t`
 * `uint_least64_t` - `unsinged long long` or `uint64_t`
+
+## Fastest-width integer types
+* `int_fast8_t` - `int8_t`
+* `int_fast16_t` - `int16_t`
+* `int_fast32_t` - `int32_t`
+* `int_fast64_t` - `int64_t`
+* `uint_fast8_t` - `uint8_t`
+* `uint_fast16_t` - `uint16_t`
+* `uint_fast32_t` - `uint32_t`
+* `uint_fast64_t` - `uint64_t`
